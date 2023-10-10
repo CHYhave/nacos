@@ -28,6 +28,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Nacos naming example.
@@ -39,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 public class NamingExample {
     
     public static void main(String[] args) throws NacosException, InterruptedException {
-        
         Properties properties = new Properties();
         properties.setProperty("serverAddr", System.getProperty("serverAddr", "localhost"));
         properties.setProperty("namespace", System.getProperty("namespace", "public"));

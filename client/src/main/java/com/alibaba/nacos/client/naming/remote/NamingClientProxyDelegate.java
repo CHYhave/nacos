@@ -195,6 +195,7 @@ public class NamingClientProxyDelegate implements NamingClientProxy {
     }
     
     private NamingClientProxy getExecuteClientProxy(Instance instance) {
+        NAMING_LOGGER.info("instance isEphemeral:{}", instance.isEphemeral());
         return instance.isEphemeral() ? grpcClientProxy : httpClientProxy;
     }
     

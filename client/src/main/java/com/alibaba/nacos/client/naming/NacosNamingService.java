@@ -89,16 +89,23 @@ public class NacosNamingService implements NamingService {
         final NacosClientProperties nacosClientProperties = NacosClientProperties.PROTOTYPE.derive(properties);
         
         ValidatorUtils.checkInitParam(nacosClientProperties);
+        // 1. 初始化命名空间
         this.namespace = InitUtils.initNamespaceForNaming(nacosClientProperties);
+        // 2. 初始化序列化器
         InitUtils.initSerialization();
+        // 3. 初始化 url根路径, 调用openApi时使用
         InitUtils.initWebRootContext(nacosClientProperties);
+        // 4. 初始化日志名称
         initLogName(nacosClientProperties);
-    
+
+        // 5. 初始化实例事件发布机制
         this.notifierEventScope = UUID.randomUUID().toString();
         this.changeNotifier = new InstancesChangeNotifier(this.notifierEventScope);
         NotifyCenter.registerToPublisher(InstancesChangeEvent.class, 16384);
         NotifyCenter.registerSubscriber(changeNotifier);
+        // 6. 初始化本地缓存
         this.serviceInfoHolder = new ServiceInfoHolder(namespace, this.notifierEventScope, nacosClientProperties);
+       // 7. 客户端代理 （httpClient、gRpcClient）
         this.clientProxy = new NamingClientProxyDelegate(this.namespace, serviceInfoHolder, nacosClientProperties, changeNotifier);
     }
     
