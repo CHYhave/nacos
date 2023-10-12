@@ -22,6 +22,7 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.AbstractEventListener;
 import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -44,9 +45,17 @@ public class NamingExample {
         properties.setProperty("namespace", System.getProperty("namespace", "public"));
         
         NamingService naming = NamingFactory.createNamingService(properties);
-        
+
+        // 注册临时实例
         naming.registerInstance("nacos.test.3", "11.11.11.11", 8888, "TEST1");
-        
+        // 注册持久化实例
+//        Instance instance = new Instance();
+//        instance.setIp("11.11.11.11");
+//        instance.setPort(888);
+//        instance.setWeight(1.0);
+//        instance.setClusterName("TEST1");
+//        instance.setEphemeral(false);
+//        naming.registerInstance("nacos.test.3", instance);
         System.out.println("instances after register: " + naming.getAllInstances("nacos.test.3"));
         
         Executor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
