@@ -89,7 +89,7 @@ public class NacosNamingService implements NamingService {
         final NacosClientProperties nacosClientProperties = NacosClientProperties.PROTOTYPE.derive(properties);
         
         ValidatorUtils.checkInitParam(nacosClientProperties);
-        // 1. 初始化命名空间
+        // 1. 根据配置初始化命名空间
         this.namespace = InitUtils.initNamespaceForNaming(nacosClientProperties);
         // 2. 初始化序列化器
         InitUtils.initSerialization();
@@ -98,7 +98,7 @@ public class NacosNamingService implements NamingService {
         // 4. 初始化日志名称
         initLogName(nacosClientProperties);
 
-        // 5. 初始化实例事件发布机制
+        // 5. 初始化实例事件发布机制, 当有多个notifier时候，notifierEventScope被用于确定是哪一个notifier，即限定作用域
         this.notifierEventScope = UUID.randomUUID().toString();
         this.changeNotifier = new InstancesChangeNotifier(this.notifierEventScope);
         NotifyCenter.registerToPublisher(InstancesChangeEvent.class, 16384);
