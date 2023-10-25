@@ -50,7 +50,7 @@ public class NamingExample {
 
         // 注册临时实例
         naming.registerInstance("nacos.test.3", "11.11.11.11", 8888, "TEST1");
-        naming.registerInstance("nacos.test.2", "11.11.11.22", 8888, "TEST1");
+//        naming.registerInstance("nacos.test.2", "11.11.11.22", 8888, "TEST1");
 
         // 注册持久化实例
 //        Instance instance = new Instance();

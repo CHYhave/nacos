@@ -151,6 +151,7 @@ public class EphemeralClientOperationServiceImpl implements ClientOperationServi
             Loggers.SRV_LOG.warn("Client connection {} already disconnect", clientId);
             return false;
         }
+        // 客户端不是临时的
         if (!client.isEphemeral()) {
             Loggers.SRV_LOG.warn("Client connection {} type is not ephemeral", clientId);
             return false;
