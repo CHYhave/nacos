@@ -91,9 +91,10 @@ public class FailoverReactor implements Closeable {
      * Init.
      */
     public void init() {
-        
+        // 每5s检查failover开关是否打开
         executorService.scheduleWithFixedDelay(new SwitchRefresher(), 0L, 5000L, TimeUnit.MILLISECONDS);
         
+        // 每24小时重新写failover目录, 也就是说对于已经存在的ServiceInfo更新后，failover需要等待24小时候财更行
         executorService.scheduleWithFixedDelay(new DiskFileWriter(), 30, DAY_PERIOD_MINUTES, TimeUnit.MINUTES);
         
         // backup file on startup if failover directory is empty.
@@ -106,6 +107,7 @@ public class FailoverReactor implements Closeable {
                 }
 
                 File[] files = cacheDir.listFiles();
+                // 只有文件为空才会执行
                 if (files == null || files.length <= 0) {
                     new DiskFileWriter().run();
                 }

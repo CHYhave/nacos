@@ -43,11 +43,15 @@ public class NamingExample {
         Properties properties = new Properties();
         properties.setProperty("serverAddr", System.getProperty("serverAddr", "localhost"));
         properties.setProperty("namespace", System.getProperty("namespace", "public"));
+        properties.setProperty("namingLoadCacheAtStart", "true");
+
         
         NamingService naming = NamingFactory.createNamingService(properties);
 
         // 注册临时实例
         naming.registerInstance("nacos.test.3", "11.11.11.11", 8888, "TEST1");
+        naming.registerInstance("nacos.test.2", "11.11.11.22", 8888, "TEST1");
+
         // 注册持久化实例
 //        Instance instance = new Instance();
 //        instance.setIp("11.11.11.11");
@@ -57,36 +61,38 @@ public class NamingExample {
 //        instance.setEphemeral(false);
 //        naming.registerInstance("nacos.test.3", instance);
         System.out.println("instances after register: " + naming.getAllInstances("nacos.test.3"));
-        
+//        System.out.println("instances after register: " + naming.getAllInstances("nacos.test.2"));
+//        naming.registerInstance("nacos.test.2", "11.11.11.334", 8888, "TEST1");
+
         Executor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
                 runnable -> {
                     Thread thread = new Thread(runnable);
                     thread.setName("test-thread");
                     return thread;
                 });
-        
+
         naming.subscribe("nacos.test.3", new AbstractEventListener() {
-            
+
             //EventListener onEvent is sync to handle, If process too low in onEvent, maybe block other onEvent callback.
             //So you can override getExecutor() to async handle event.
             @Override
             public Executor getExecutor() {
                 return executor;
             }
-            
+
             @Override
             public void onEvent(Event event) {
                 System.out.println("serviceName: " + ((NamingEvent) event).getServiceName());
                 System.out.println("instances from event: " + ((NamingEvent) event).getInstances());
             }
         });
-    
-        naming.deregisterInstance("nacos.test.3", "11.11.11.11", 8888, "TEST1");
-        
-        Thread.sleep(1000);
-    
-        System.out.println("instances after deregister: " + naming.getAllInstances("nacos.test.3"));
-        
-        Thread.sleep(1000);
+
+//        naming.deregisterInstance("nacos.test.3", "11.11.11.11", 8888, "TEST1");
+
+        Thread.sleep(2000);
+
+//        System.out.println("instances after deregister: " + naming.getAllInstances("nacos.test.3"));
+
+//        Thread.sleep(1000);
     }
 }
